@@ -1,5 +1,5 @@
 /**
- * Sample React Native App
+ * Meow Marie
  * https://github.com/facebook/react-native
  * @flow
  */
@@ -16,7 +16,7 @@ import {
   View,
   Image,
   TouchableHighlight,
-  Slider
+  Navigator
 } from 'react-native';
 
 import calculateDuration from './App/Utils/loopCalculator';
@@ -85,33 +85,55 @@ class MeowMarie extends Component {
     purring.stop();
   }
   render() {
+    const routes = [
+      {title: 'First cat', index: 0},
+      {title: 'Second cat', index: 1},
+      {title: 'Thrid cat', index: 2},
+    ];
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to MeowMarie!!
-        </Text>
-      <TouchableHighlight onPress={this._onPressButton}>
-      <Image
-          style={styles.cat}
-          source={{uri: 'cute_cat.jpg'}}
-        />
-      </TouchableHighlight>
-      <TouchableHighlight onPress={this._onLoop}>
-      <Image
-          style={styles.logo}
-          source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
-        />
-      </TouchableHighlight>
-      <TouchableHighlight onPress={this._sendStopSignal}>
-        <Text style={styles.welcome}>
-          STOP
-        </Text>
-      </TouchableHighlight>
-      <Slider
-          {...this.props}
-          onValueChange={(value) => this.setState({value: value})} 
+    <Navigator
+        initialRoute={routes[0]}
+        intialRouteStack={routes}
+        renderScene={(route, navigator) =>
+          <View style={styles.container}>
+            <Text style={styles.welcome}>
+              Welcome to Meow Marie
+            </Text>
+           <TouchableHighlight onPress={this._onPressButton}>
+            <Image
+                style={styles.cat}
+                source={{uri: 'cute_cat.jpg'}}
+              />
+          </TouchableHighlight>
+            <TouchableHighlight onPress={() => {
+              if (route.index === 0) {
+                  navigator.push(routes[1]);
+              } else if (route.index === 1) {
+                  navigator.push(routes[2]);
+              } else {
+                navigator.pop();
+              }
+            }}>
+            <Text>Swipe for more cats {route.title}!</Text>
+          </TouchableHighlight>
+          </View>
+        }
+        navigationBar={
+          <Navigator.NavigationBar
+            routeMapper={{
+              LeftButton: (route, navigator, index, navState) =>
+                { return (<Text>Cancel</Text>); },
+              RightButton: (route, navigator, index, navState) =>
+                { return (<Text>Done</Text>); },
+              Title: (route, navigator, index, navState) =>
+                { return (<Text>Awesome Nav Bar</Text>); },
+            }}
+            style={{backgroundColor: 'gray'}}
+          />
+        }
+
       />
-      </View>
+      
     );
   }
 }
@@ -144,3 +166,20 @@ const styles = StyleSheet.create({
 });
 
 AppRegistry.registerComponent('MeowMarie', () => MeowMarie);
+
+/*          <View style={styles.container}>
+            <Text style={styles.welcome}>
+              Welcome to Meow Marie
+            </Text>
+          <TouchableHighlight onPress={this._onPressButton}>
+          <Image
+              style={styles.cat}
+              source={{uri: 'cute_cat.jpg'}}
+            />
+          </TouchableHighlight>
+          <TouchableHighlight onPress={this._sendStopSignal}>
+            <Text style={styles.welcome}>
+              Slide for more cute cats
+            </Text>
+          </TouchableHighlight>
+          </View>*/
