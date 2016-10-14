@@ -86,9 +86,9 @@ class MeowMarie extends Component {
   }
   render() {
     const routes = [
-      {title: 'First cat', index: 0},
-      {title: 'Second cat', index: 1},
-      {title: 'Thrid cat', index: 2},
+      {title: 'First cat', index: 0, image: 'cute_cat.jpg'},
+      {title: 'Second cat', index: 1, image: 'cute_cat.jpg'},
+      {title: 'Thrid cat', index: 2, image: 'cute_cat.jpg'},
     ];
     return (
     <Navigator
@@ -96,13 +96,10 @@ class MeowMarie extends Component {
         intialRouteStack={routes}
         renderScene={(route, navigator) =>
           <View style={styles.container}>
-            <Text style={styles.welcome}>
-              Welcome to Meow Marie
-            </Text>
            <TouchableHighlight onPress={this._onPressButton}>
             <Image
                 style={styles.cat}
-                source={{uri: 'cute_cat.jpg'}}
+                source={{uri: route.image}}
               />
           </TouchableHighlight>
             <TouchableHighlight onPress={() => {
@@ -122,11 +119,21 @@ class MeowMarie extends Component {
           <Navigator.NavigationBar
             routeMapper={{
               LeftButton: (route, navigator, index, navState) =>
-                { return (<Text>Cancel</Text>); },
+              { 
+                  if (route.index === 0) {
+                    return null;
+                  } else {
+                    return (
+                      <TouchableHighlight onPress={() => navigator.pop ()}>
+                        <Text> Back </Text>
+                      </TouchableHighlight>
+                    );
+                  }
+              },
               RightButton: (route, navigator, index, navState) =>
-                { return (<Text>Done</Text>); },
+              {},
               Title: (route, navigator, index, navState) =>
-                { return (<Text>Awesome Nav Bar</Text>); },
+                { return (<Text>Welcome to Meow Marie</Text>); },
             }}
             style={{backgroundColor: 'gray'}}
           />
@@ -156,7 +163,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   cat: {
-    width: 271,
+    width: 320,
     height: 501
   },
   logo: {
@@ -166,20 +173,3 @@ const styles = StyleSheet.create({
 });
 
 AppRegistry.registerComponent('MeowMarie', () => MeowMarie);
-
-/*          <View style={styles.container}>
-            <Text style={styles.welcome}>
-              Welcome to Meow Marie
-            </Text>
-          <TouchableHighlight onPress={this._onPressButton}>
-          <Image
-              style={styles.cat}
-              source={{uri: 'cute_cat.jpg'}}
-            />
-          </TouchableHighlight>
-          <TouchableHighlight onPress={this._sendStopSignal}>
-            <Text style={styles.welcome}>
-              Slide for more cute cats
-            </Text>
-          </TouchableHighlight>
-          </View>*/
